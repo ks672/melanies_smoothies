@@ -4,6 +4,9 @@ import streamlit as st
 #from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 
+#api call for fruit data in a json format
+import requests
+
 # Write directly to the app
 st.title(f"Customise your smoothie laddie! :cup_with_straw:")
 st.write(
@@ -37,6 +40,10 @@ if ingredients_list:
 
         for x in ingredients_list:
             ingredients_string += x + ' '
+            st.subheader(x + 'Nutrition Information')
+            smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + x)
+            #st.text(smoothiefroot_response.json())
+            st_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
         st.write(ingredients_string)
 
@@ -51,11 +58,7 @@ if ingredients_list:
             
             st.success('Your Smoothie is ordered!', icon="✅")
 
-#api call for fruit data in a json format
-import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-#st.text(smoothiefroot_response.json())
-st_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+
 
 #option = st.selectbox(
 #    "Choose your fruit?",
